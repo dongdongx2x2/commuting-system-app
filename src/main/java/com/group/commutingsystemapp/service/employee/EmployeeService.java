@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmployeeService {
@@ -21,11 +22,18 @@ public class EmployeeService {
     @Autowired
     private TeamRepository teamRepository;
 
+    @Transactional
     public Employee saveEmployee(EmployeeRequestDTO request) {
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(() -> new RuntimeException("Team not found"));
 
         Employee employee = request.toEmployee(team);
+
+        if (request.getIsManager()) {
+            team.setManager(employee);
+            teamRepository.save(team);
+        }
+
         return employeeRepository.save(employee);
     }
 
