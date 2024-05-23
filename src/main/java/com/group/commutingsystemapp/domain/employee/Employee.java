@@ -1,5 +1,6 @@
 package com.group.commutingsystemapp.domain.employee;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.group.commutingsystemapp.domain.team.Team;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +32,7 @@ public class Employee {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
+    @JsonIgnore
     private Team team;
 
     protected Employee () {
@@ -66,5 +68,9 @@ public class Employee {
 
     public Team getTeam() {
         return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
